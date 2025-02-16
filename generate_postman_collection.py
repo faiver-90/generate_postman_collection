@@ -42,7 +42,7 @@ def generate_postman_collection(openapi_data):
     """Генерирует Postman-коллекцию с группировкой по тегам и названием Cryptouch"""
     collection = {
         "info": {
-            "name": "Cryptouch_" + time.strftime('%Y-%m-%d'),
+            "name": "Cryptouch_" + time.strftime('%Y-%m-%d_%H-%M-%S'),
             "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
         },
         "item": []
