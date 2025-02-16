@@ -15,6 +15,7 @@ Create a `.env` file in the root directory and add:
 POSTMAN_KEY=your_postman_api_key
 POSTMAN_WORKSPACE_ID=your_workspace_id
 OPENAPI_URL=http://host.docker.internal:8080/api/openapi.json
+POSTMAN_WORKSPACE_NAME=your_name_workspace
 ```
 
 ## 🚀 Running via Docker
