@@ -2,16 +2,14 @@
 SET CONTAINER_NAME=postman_collection_generator
 SET IMAGE_NAME=postman_collector
 
-:: Проверяем, запущен ли контейнер
-docker ps -a --format "{{.Names}}" | findstr /C:"%CONTAINER_NAME%" > nul
-IF %ERRORLEVEL% == 0 (
-    echo Контейнер уже существует. Запуск...
-    docker start %CONTAINER_NAME%
-) ELSE (
-    echo Контейнер не найден. Собираем и запускаем...
+:: Проверяем, существует ли образ
+docker images -q %IMAGE_NAME% > nul
+IF %ERRORLEVEL% NEQ 0 (
+    echo Образ не найден. Собираем...
     docker build -t %IMAGE_NAME% .
-    docker run --name %CONTAINER_NAME% --env-file .env %IMAGE_NAME%
 )
 
-:: Проверка логов при необходимости
-docker logs -f %CONTAINER_NAME%
+echo Запуск контейнера...
+docker run --rm --env-file .env %IMAGE_NAME%
+
+echo Контейнер успешно завершил работу и был удален.

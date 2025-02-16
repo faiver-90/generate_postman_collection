@@ -8,8 +8,26 @@ from dotenv import load_dotenv
 load_dotenv()
 
 POSTMAN_KEY = os.getenv("POSTMAN_KEY")
-POSTMAN_WORKSPACE_ID = os.getenv("POSTMAN_WORKSPACE_ID")
+POSTMAN_WORKSPACE_NAME = os.getenv("POSTMAN_WORKSPACE_NAME")
 OPENAPI_URL = os.getenv("OPENAPI_URL")
+
+
+def get_workspace_id():
+    """Получает ID воркспейса по его имени"""
+    url = "https://api.getpostman.com/workspaces"
+    headers = {"X-Api-Key": POSTMAN_KEY}
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    workspaces = response.json().get("workspaces", [])
+
+    for ws in workspaces:
+        if ws["name"] == POSTMAN_WORKSPACE_NAME:
+            return ws["id"]
+
+    raise ValueError(f"Workspace '{POSTMAN_WORKSPACE_NAME}' не найден!")
+
+
+POSTMAN_WORKSPACE_ID = get_workspace_id()
 
 
 def fetch_openapi_spec(url):
