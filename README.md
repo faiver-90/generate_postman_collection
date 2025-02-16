@@ -5,7 +5,7 @@ This project automatically fetches an OpenAPI specification, generates a **Postm
 ## 📦 Installation
 ### 1. Clone the Repository
 ```sh
-git clone https://github.com/your-repository/postman-collection-generator.git
+git clone https://github.com/faiver-90/generate_postman_collection.git
 cd postman-collection-generator
 ```
 
