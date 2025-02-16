@@ -1,46 +1,45 @@
 # 🚀 Postman Collection Generator (Dockerized)
 
-Этот проект автоматически загружает OpenAPI спецификацию, формирует коллекцию **Postman** и загружает её в указанное рабочее пространство.
+This project automatically fetches an OpenAPI specification, generates a **Postman** collection, and uploads it to the specified workspace.
 
-## 📦 Установка
-### 1. Клонирование репозитория
+## 📦 Installation
+### 1. Clone the Repository
 ```sh
 git clone https://github.com/your-repository/postman-collection-generator.git
 cd postman-collection-generator
 ```
 
-### 2. Создание `.env` файла
-Создайте файл `.env` в корневой папке и добавьте:
+### 2. Create a `.env` File
+Create a `.env` file in the root directory and add:
 ```
 POSTMAN_KEY=your_postman_api_key
 POSTMAN_WORKSPACE_ID=your_workspace_id
 OPENAPI_URL=http://host.docker.internal:8080/api/openapi.json
 ```
 
-## 🚀 Запуск через Docker
-Скрипт **автоматически проверяет**, собран ли образ. Если нет — собирает, если уже есть — просто запускает контейнер.
+## 🚀 Running via Docker
+The script **automatically checks** if the image is built. If not, it builds it; if the image exists, it simply runs the container.
 
-### 🏗 **Сборка и запуск контейнера**
+### 🏗 **Build and Run the Container**
 ```sh
 run_docker.bat
 ```
 
-## 🔧 Ручная сборка и запуск (если нужно)
-Если хотите собрать и запустить контейнер вручную:
+## 🔧 Manual Build and Run (if needed)
+If you want to manually build and run the container:
 ```sh
-# Собрать образ
+# Build the image
 docker build -t postman_collector .
 
-# Запустить контейнер
+# Run the container
 docker run --rm --env-file .env postman_collector
 ```
 
-## 🛠 Что делает этот проект?
-1. **Загружает OpenAPI спецификацию** из указанного URL.
-2. **Создаёт Postman-коллекцию**, разделяя эндпоинты по тегам.
-3. **Генерирует тело запроса** по схеме OpenAPI.
-4. **Загружает коллекцию в Postman** (с названием `Cryptouch_YYYY-MM-DD_HH-MM-SS`).
-5. **Работает в Docker**.
+## 🛠 What Does This Project Do?
+1. **Fetches the OpenAPI specification** from the specified URL.
+2. **Creates a Postman collection**, grouping endpoints by tags.
+3. **Generates request bodies** based on the OpenAPI schema.
+4. **Uploads the collection to Postman** (named `Cryptouch_YYYY-MM-DD_HH-MM-SS`).
+5. **Runs inside Docker**.
 
-✅ **Теперь можно быстро импортировать API-коллекцию в Postman и тестировать!** 🚀
-
+✅ **Now you can quickly import the API collection into Postman and start testing!** 🚀
