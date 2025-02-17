@@ -43,17 +43,50 @@ def resolve_ref(ref, openapi_data):
     return openapi_data.get("components", {}).get("schemas", {}).get(ref_path, {})
 
 
-def extract_example(schema):
-    """Извлекает пример из OpenAPI схемы или строит его на основе свойств"""
+def extract_example(schema, openapi_data):
+    """
+    Извлекает пример из OpenAPI схемы или строит его на основе свойств.
+    """
+    if "$ref" in schema:
+        schema = resolve_ref(schema["$ref"], openapi_data)
+
     if "example" in schema:
         return schema["example"]
 
-    example = {}
-    properties = schema.get("properties", {})
-    for key, value in properties.items():
-        example[key] = value.get("example", "string" if value.get("type") == "string" else 0)
+    if "anyOf" in schema:
+        for option in schema["anyOf"]:
+            if option.get("format") == "binary" and option.get("type") == "string":
+                return "string"
+            if option.get("type") == "string":
+                return "string"
+            if option.get("type") == "integer":
+                return 0
+            if option.get("type") == "boolean":
+                return False
+            if "example" in option:
+                return option["example"]
 
-    return example
+    if schema.get("type") == "array":
+        items_schema = schema.get("items", {})
+        return [extract_example(items_schema, openapi_data)]
+
+    if schema.get("type") == "object":
+        example = {}
+        properties = schema.get("properties", {})
+        for key, value in properties.items():
+            example[key] = extract_example(value, openapi_data)
+        return example
+
+    if schema.get("type") == "string":
+        return "string"
+
+    if schema.get("type") == "integer":
+        return 0
+
+    if schema.get("type") == "boolean":
+        return False
+
+    return None
 
 
 def generate_postman_collection(openapi_data):
@@ -100,7 +133,7 @@ def generate_postman_collection(openapi_data):
                         if "$ref" in schema:
                             schema = resolve_ref(schema["$ref"], openapi_data)
 
-                        example = extract_example(schema)
+                        example = extract_example(schema, openapi_data)
 
                         request["request"]["body"] = {
                             "mode": "raw",
