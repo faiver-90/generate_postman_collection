@@ -52,15 +52,17 @@ def extract_example(schema, openapi_data):
 
     if "example" in schema:
         return schema["example"]
-    #
+
     if "anyOf" in schema:
         for option in schema["anyOf"]:
             if option.get("format") == "binary" and option.get("type") == "string":
                 return "binary_data"
+            if option.get("type") == "string" and option.get("format") == "date-time":
+                return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
             if option.get("type") == "string":
-                return "example_string_1"
+                return "string"
             if option.get("type") == "integer":
-                return 42
+                return 0
             if option.get("type") == "boolean":
                 return True
             if "example" in option:
@@ -80,7 +82,7 @@ def extract_example(schema, openapi_data):
     if schema.get("type") == "string":
         if schema.get("format") == "date-time":
             return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        return "example_string_2"
+        return "string"
 
     if schema.get("type") == "integer":
         return 1  # Меняем 0 на 1 для корректных значений ID
@@ -92,6 +94,7 @@ def extract_example(schema, openapi_data):
         return None  # Корректная обработка null-значений
 
     return None
+
 
 
 def generate_postman_collection(openapi_data):
