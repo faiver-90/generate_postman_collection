@@ -52,17 +52,17 @@ def extract_example(schema, openapi_data):
 
     if "example" in schema:
         return schema["example"]
-
+    #
     if "anyOf" in schema:
         for option in schema["anyOf"]:
             if option.get("format") == "binary" and option.get("type") == "string":
-                return "string"
+                return "binary_data"
             if option.get("type") == "string":
-                return "string"
+                return "example_string_1"
             if option.get("type") == "integer":
-                return 0
+                return 42
             if option.get("type") == "boolean":
-                return False
+                return True
             if "example" in option:
                 return option["example"]
 
@@ -78,13 +78,18 @@ def extract_example(schema, openapi_data):
         return example
 
     if schema.get("type") == "string":
-        return "string"
+        if schema.get("format") == "date-time":
+            return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        return "example_string_2"
 
     if schema.get("type") == "integer":
-        return 0
+        return 1  # Меняем 0 на 1 для корректных значений ID
 
     if schema.get("type") == "boolean":
-        return False
+        return False  # Используем False вместо 0
+
+    if schema.get("type") == "null" or schema.get("nullable"):
+        return None  # Корректная обработка null-значений
 
     return None
 
